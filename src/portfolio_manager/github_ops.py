@@ -2,6 +2,7 @@ import logging
 import os
 
 from github import Auth, Github, GithubException
+from github.Repository import Repository
 
 logger = logging.getLogger(__name__)
 
@@ -79,4 +80,19 @@ def create_agent_pr(
         return True
     except Exception as e:
         logger.error("Failed to create PR: %s", str(e))
+        return False
+
+
+def update_repository_description(repo: Repository, description: str) -> bool:
+    text = description.strip()
+    if len(text) > 350:
+        text = text[:347] + "..."
+    if not text:
+        return False
+    try:
+        repo.edit(description=text)
+        logger.info("Updated GitHub description for %s", repo.full_name)
+        return True
+    except Exception as exc:
+        logger.error("Failed to update description for %s: %s", repo.full_name, exc)
         return False
