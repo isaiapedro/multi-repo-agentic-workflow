@@ -29,3 +29,29 @@ class OrchestratorDB:
                 """
             )
         logger.info("Database tables verified.")
+
+    def insert_new_run(self, repo_name: str, status: str) -> int:
+        with self.conn.cursor() as cur:
+            cur.execute(
+                """
+                INSERT INTO workflow_state (repo_name, current_step, status)
+                VALUES (%s, %s, %s)
+                RETURNING run_id
+                """,
+                (repo_name, "orchestrator", status),
+            )
+            row = cur.fetchone()
+        return row[0]
+
+    def update_run_status(self, repo_name: str, status: str) -> None:
+        with self.conn.cursor() as cur:
+            cur.execute(
+                """
+                UPDATE workflow_state
+                SET status = %s, last_updated = CURRENT_TIMESTAMP
+                WHERE run_id = (
+                    SELECT MAX(run_id) FROM workflow_state WHERE repo_name = %s
+                )
+                """,
+                (status, repo_name),
+            )

@@ -6,14 +6,46 @@ from github import Auth, Github, GithubException
 logger = logging.getLogger(__name__)
 
 
-def create_agent_pr(repo_name, branch_name, file_path, content, commit_message):
+def github_client() -> Github | None:
     token = os.environ.get("GITHUB_TOKEN")
     if not token:
+        return None
+    return Github(auth=Auth.Token(token))
+
+
+def list_user_repository_full_names(
+    g: Github,
+    *,
+    affiliation: str,
+    exclude_forks: bool,
+) -> list[str]:
+    user = g.get_user()
+    repos = user.get_repos(affiliation=affiliation, sort="full_name", direction="asc")
+    out: list[str] = []
+    for repo in repos:
+        if exclude_forks and repo.fork:
+            continue
+        out.append(repo.full_name)
+    return out
+
+
+def create_agent_pr(
+    repo_full_name: str,
+    branch_name: str,
+    file_path: str,
+    content: str,
+    commit_message: str,
+):
+    g = github_client()
+    if not g:
         logger.error("GITHUB_TOKEN is not set")
         return False
-    g = Github(auth=Auth.Token(token))
-    user = g.get_user()
-    repo = user.get_repo(repo_name)
+
+    try:
+        repo = g.get_repo(repo_full_name)
+    except GithubException as exc:
+        logger.error("Failed to resolve repository %s: %s", repo_full_name, exc)
+        return False
 
     try:
         source = repo.get_branch(repo.default_branch)
@@ -43,7 +75,7 @@ def create_agent_pr(repo_name, branch_name, file_path, content, commit_message):
             head=branch_name,
             base=repo.default_branch,
         )
-        logger.info("Successfully opened PR #%s on %s", pr.number, repo_name)
+        logger.info("Successfully opened PR #%s on %s", pr.number, repo_full_name)
         return True
     except Exception as e:
         logger.error("Failed to create PR: %s", str(e))

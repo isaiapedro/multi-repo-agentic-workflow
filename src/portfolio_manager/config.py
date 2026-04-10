@@ -22,3 +22,12 @@ def postgres_connection_kwargs():
 
 def log_file_path():
     return os.environ.get("AGENT_LOG_FILE", "agent_runs.log")
+
+
+def github_repo_affiliation():
+    return os.environ.get("GITHUB_REPO_AFFILIATION", "owner")
+
+
+def github_repo_exclude_forks() -> bool:
+    v = os.environ.get("GITHUB_REPO_EXCLUDE_FORKS", "true").lower()
+    return v in ("1", "true", "yes")

@@ -9,12 +9,13 @@ logger = logging.getLogger(__name__)
 
 def run_orchestrator(repo_list: list):
     config = AgentConfig()
-    OrchestratorDB()
+    db = OrchestratorDB()
 
     logger.info("Starting Manual Run for %s repos...", len(repo_list))
 
     for repo in repo_list:
         logger.info("Processing repository: %s", repo)
+        db.insert_new_run(repo, "running")
 
         retry_count = 0
         success = False
@@ -34,15 +35,19 @@ def run_orchestrator(repo_list: list):
                 new_readme_content = "# Updated Repository\nManaged by Agent."
 
                 logger.info("[%s] Proposing changes via PR...", repo)
-                create_agent_pr(
-                    repo_name=repo,
+                pr_created = create_agent_pr(
+                    repo_full_name=repo,
                     branch_name="agent/readme-update",
                     file_path="README.md",
                     content=new_readme_content,
                     commit_message="Refactor README using Vector DB context",
                 )
 
-                success = True
+                if pr_created:
+                    success = True
+                    db.update_run_status(repo, "completed")
+                else:
+                    raise RuntimeError("PR creation returned False")
 
             except Exception as e:
                 retry_count += 1
@@ -59,3 +64,4 @@ def run_orchestrator(repo_list: list):
                         repo,
                         config.max_retries,
                     )
+                    db.update_run_status(repo, "failed")
