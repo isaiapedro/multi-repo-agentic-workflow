@@ -44,6 +44,8 @@ print(readme)
 ```
 ## Architecture
 
+![Diagram](diagram.png)
+
 • **portfolio**: Manages the overall portfolio, including adding and removing projects.
 
 • **project**: Handles individual project data, including metadata and dependencies.
