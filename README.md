@@ -45,18 +45,27 @@ print(readme)
 ## Architecture
 
 • **portfolio**: Manages the overall portfolio, including adding and removing projects.
+
 • **project**: Handles individual project data, including metadata and dependencies.
+
 • **readme_llm**: Uses an AI-powered model to generate README files with Markdown syntax. It also includes utility functions like _should_skip_path to handle and skip binary files during generation.
+
 • **repo_context**: Extracts relevant information from GitHub repositories via the GitHub API, such as file contents, descriptions, primary languages, and topics.
+
 • **workflows**: Defines workflows and pipelines to orchestrate the generation process.
 
 ## Improvements
 
 • **Code Organization**: Reorganize the code to make it more modular (e.g., creating separate modules for markdown, github, etc.).
+
 • **Error Handling**: Add robust try-except blocks and logging mechanisms to handle exceptions, edge cases, and unexpected inputs gracefully.
+
 • **Performance Optimization**: Optimize computationally expensive functions, such as the language model calls, to improve the overall efficiency of the package.
-• **Testing**: Implement a comprehensive testing suite, including unit and integration tests, to ensure the package's stability and reliability.
+
+•**Testing**: Implement a comprehensive testing suite, including unit and integration tests, to ensure the package's stability and reliability.
+
 • **Documentation & Type Hints**: Provide clearer documentation for each module and use type hints to specify expected input types and return values for easier maintenance and code completion.
+
 • **Code Style**: Strictly follow PEP 8 guidelines for code style, indentation, and naming conventions.
 
 ## Conclusion
