@@ -1,68 +1,67 @@
+# Portfolio Manager 📁
+### (Python, LLMs, GitHub API)
 
-![Diagram](diagram.png)
+## Contents
 
-The provided code is a Python package for managing portfolios of projects. It includes various modules and functions for tasks such as:
+- [Introduction](#introduction)
+- [How to Run](#how-to-run)
+- [Architecture](#architecture)
+- [Improvements](#improvements)
+- [Conclusion](#conclusion)
 
-1.  **Portfolio Management**: The `portfolio` module manages the overall portfolio, including adding and removing projects.
-2.  **Project Management**: The `project` module handles individual project data, including metadata and dependencies.
-3.  **Readme Generation**: The `readme_llm` module uses a language model to generate README files for projects based on their context.
-4.  **Repository Context Gathering**: The `repo_context` module extracts relevant information from GitHub repositories, such as file contents and dependencies.
+## Introduction
 
-Here's an overview of the code structure:
+Portfolio Manager is a Python package designed for managing portfolios of projects and automating documentation. It leverages AI-powered language models and the GitHub API to gather repository context, manage project metadata, and generate comprehensive, context-aware README files automatically.
 
-*   The package is organized into several subpackages:
-    *   `portfolio`: Manages the overall portfolio.
-    *   `project`: Handles individual project data.
-    *   `readme_llm`: Uses a language model to generate README files.
-    *   `repo_context`: Extracts information from GitHub repositories.
-*   Each module has its own set of functions and classes for performing specific tasks.
+## How to Run
 
-**Example Use Cases:**
-
-1.  **Adding a Project**: You can add a project to the portfolio using the `portfolio` module:
-
-    ```python
+1. Initialize a portfolio and add projects
+```python
 from portfolio import Portfolio
+from project import Project
 
 # Create a new portfolio
 portfolio = Portfolio()
 
 # Add a project to the portfolio
-project = Project(name="My Project", url="https://example.com")
+project = Project(name="My Project", url="[https://example.com](https://example.com)")
 portfolio.add_project(project)
 ```
-
-2.  **Generating a README**: You can use the `readme_llm` module to generate a README file for a project based on its context:
-
-    ```python
-from readme_llm import generate_readme_with_escalation
-
-# Gather repository context
-context = gather_repository_context(repo)
-
-# Generate README with escalation
-readme, used_smart = generate_readme_with_escalation(context, repo.full_name)
+2. Gather repository context from GitHub
 ```
-
-3.  **Gathering Repository Context**: You can use the `repo_context` module to extract relevant information from a GitHub repository:
-
-    ```python
 from repo_context import gather_repository_context
 
-# Gather repository context
+# Gather repository context information (description, language, topics, etc.)
 context = gather_repository_context(repo)
 ```
+3. Generate a Markdown README using the LLM
+```
+from readme_llm import generate_readme_with_escalation
 
-**Best Practices:**
+# Generate README with escalation using the gathered context
+readme, used_smart = generate_readme_with_escalation(context, repo.full_name)
+print(readme)
+```
+## Architecture
 
-1.  **Modular Code Structure**: The code is organized into separate modules for each task, making it easier to maintain and extend.
-2.  **Clear Function Names**: Function names are descriptive and follow a consistent naming convention.
-3.  **Type Hints and Docstrings**: Functions have type hints and docstrings that provide clear documentation and help with code completion.
+• **portfolio**: Manages the overall portfolio, including adding and removing projects.
+• **project**: Handles individual project data, including metadata and dependencies.
+• **readme_llm**: Uses an AI-powered model to generate README files with Markdown syntax. It also includes utility functions like _should_skip_path to handle and skip binary files during generation.
+• **repo_context**: Extracts relevant information from GitHub repositories via the GitHub API, such as file contents, descriptions, primary languages, and topics.
+• **workflows**: Defines workflows and pipelines to orchestrate the generation process.
 
-**Potential Improvements:**
+## Improvements
 
-1.  **Error Handling**: The code could benefit from more robust error handling to handle edge cases and unexpected input.
-2.  **Performance Optimization**: Some functions, such as the language model, may be computationally expensive. Optimizing these functions for performance would improve overall package efficiency.
-3.  **Testing**: While there are some tests provided, a comprehensive testing suite would help ensure the package's stability and reliability.
+• **Code Organization**: Reorganize the code to make it more modular (e.g., creating separate modules for markdown, github, etc.).
+• **Error Handling**: Add robust try-except blocks and logging mechanisms to handle exceptions, edge cases, and unexpected inputs gracefully.
+• **Performance Optimization**: Optimize computationally expensive functions, such as the language model calls, to improve the overall efficiency of the package.
+• **Testing**: Implement a comprehensive testing suite, including unit and integration tests, to ensure the package's stability and reliability.
+• **Documentation & Type Hints**: Provide clearer documentation for each module and use type hints to specify expected input types and return values for easier maintenance and code completion.
+• **Code Style**: Strictly follow PEP 8 guidelines for code style, indentation, and naming conventions.
 
-By following best practices and addressing potential improvements, this code can become even more maintainable, efficient, and user-friendly.
+## Conclusion
+
+Thanks for reading up until here. I had a ton of fun doing this project and got a lot of useful insights on Python packaging, API integrations, and working with LLMs. If you want to see similar projects, go to my github page. Feel free to reach me on [LinkedIn](https://www.linkedin.com/in/isaiapedro/) or my [Webpage](https://isaiapedro.github.io/).
+
+
+Bye! 👋
